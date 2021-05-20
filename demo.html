@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<head></head>
+
+<body>
+
+    <style>
+        #demo {
+            width: 300px;
+            margin: 0 auto;
+            overflow: hidden
+        }
+        
+        #indemo {
+            width: 300%
+        }
+        
+        #demo1 {
+            width: 300px;
+            float: left
+        }
+        
+        #demo2 {
+            width: 300px;
+            float: left
+        }
+        
+        .slider {
+            overflow-y: hidden;
+            max-height: 500px;
+            /* 最大高度 */
+            background: pink;
+            height: 200px;
+            width: 200px;
+            /*  Webkit内核浏览器：Safari and Chrome*/
+            -webkit-transition-property: all;
+            -webkit-transition-duration: .5s;
+            -webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+            /*  Mozilla内核浏览器：firefox3.5+*/
+            -moz-transition-property: all;
+            -moz-transition-duration: .5s;
+            -moz-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+            /*  Opera*/
+            -o-transition-property: all;
+            -o-transition-duration: .5s;
+            -o-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+            /*  IE9*/
+            -ms-transition-property: all;
+            -ms-transition-duration: .5s;
+            -ms-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+        }
+        
+        .slider.closed {
+            max-height: 0;
+        }
+    </style>
+    <div id="demo">
+        <div id="indemo">
+            <div id="demo1">如何用js实现一个横向滚动新闻</div>
+            <div id="demo2"></div>
+        </div>
+    </div>
+    <div>
+        <div style="height: 200px; width: 200px; border: 1px solid #ccc;">
+            <div class="slider" id="slider">这里是内容</div>
+        </div>
+        <button onclick="document.getElementById('slider').classList.toggle('closed');">点击看看</button>
+    </div>
+    <div style="max-height: 200px;">
+        <canvas width="1831" height="877">
+
+            <script>
+            var canvas = document.body.querySelector('canvas'),
+                ctx = canvas.getContext('2d'),
+                W = canvas.width = window.innerWidth,
+                H = canvas.height = window.innerHeight,
+                pixels = [];
+            
+            for (var x = -400; x < 400; x += 5) {
+              for (var z = -250; z < 250; z += 5) {
+                pixels.push({x: x, y: 100, z: z});
+              }  
+            }
+            
+            function render(ts) {
+              var imageData = ctx.getImageData(0, 0, W, H),
+                  len = pixels.length,
+                  fov = 250,
+                  pixel, scale,
+                  x2d, y2d, c;
+            
+              for (var i = 0; i < len; i++) {
+                pixel = pixels[i];
+                scale = fov / (fov + pixel.z);
+                x2d = pixel.x * scale + W / 2;
+                y2d = pixel.y * scale + H / 2;
+                if(x2d >= 0 && x2d <= W && y2d >= 0 && y2d <= H) {
+                  c = (Math.round(y2d) * imageData.width + Math.round(x2d)) * 4;
+                  imageData.data[c] = 17;
+                  imageData.data[c + 1] = 122;
+                  imageData.data[c + 2] = 181;
+                  imageData.data[c + 3] = 255;
+                }
+                pixel.z -= 0.4;
+                pixel.y = H / 14 + Math.sin(i / len * 15 + (ts / 450)) * 10;
+                if (pixel.z < -fov) pixel.z += 2 * fov;
+              }
+              ctx.putImageData(imageData, 0, 0);
+            }
+            
+            (function drawFrame(ts){
+              requestAnimationFrame(drawFrame, canvas);
+              ctx.fillStyle = '#17293a';
+              ctx.fillRect(0, 0, W, H);
+              render(ts);
+            }());</script>
+            
+            
+            
+            </canvas>
+    </div>
+    <script>
+        var speed = 10; //数字越大越慢
+        var demo = document.getElementById("demo")
+        var demo1 = document.getElementById("demo1")
+        var demo2 = document.getElementById("demo2")
+        demo2.innerHTML = demo1.innerHTML;
+
+        function marquee() {
+            if (demo.scrollLeft >= demo1.offsetWidth) {
+                demo.scrollLeft = 0;
+            } else {
+                demo.scrollLeft++;
+            }
+        }
+        setInterval(marquee, speed)
+    </script>
+
+</body>

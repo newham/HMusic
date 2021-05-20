@@ -3,17 +3,1130 @@
 
 <head>
     <meta charset="UTF-8">
-    <title id="head-title">demo</title>
+    <title id="head-title">H-Music</title>
     <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <link rel="icon" href="static/img/icon.ico">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
     <!-- load css -->
     <link rel="stylesheet" type="text/css" href="static/css/demo.css" id="theme-css" />
     <!-- load js -->
     <script src="static/js/demo.js"></script>
+    <style>
+         :root {
+            --main-color: rgb(241, 53, 84);
+            --main-color-light: rgb(247, 76, 105);
+            --main-color-dark: rgb(163, 27, 50);
+            /* --main-color: rgb(135, 94, 212);
+            --main-color-light: rgb(96, 62, 158);
+            --main-color-dark: rgb(72, 50, 112); */
+            /* --main-color: #3461c1;
+            --main-color-light: #4579e2;
+            --main-color-dark: #2d55aa; */
+            --danger: rgb(247, 76, 247);
+        }
+        
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        
+        audio {
+            margin-top: 3px;
+            outline: none;
+        }
+        
+        .tool-bar {
+            user-select: none;
+            width: 100%;
+            position: fixed;
+            bottom: 0px;
+            height: 60px;
+            line-height: 60px;
+            border-top: 1px solid #ddd;
+            -webkit-app-region: drag;
+            background: #F1F1F1;
+            color: var(--main-color);
+            text-align: center;
+            /* margin-left: 78px; */
+            /* padding-top: 10px; */
+            /* padding-bottom: 10px; */
+            /* text-align: center; */
+            /* font-size: 18px; */
+        }
+        
+        .tool-bar img {
+            float: left;
+            height: 60px;
+        }
+        
+        .content {
+            height: calc(100% - 60px);
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        a {
+            cursor: pointer;
+        }
+        
+        ul {
+            margin: 0;
+            list-style-type: none;
+        }
+        
+        .btn-default {
+            padding: 8px 10px;
+            /* background: var(--main-color); */
+            color: var(--main-color);
+            /* border-radius: 1px; */
+        }
+        
+        .btn-default:hover {
+            color: var(--main-color-light);
+        }
+        
+        .btn-default:active {
+            color: var(--main-color-dark);
+        }
+        
+        .btn {
+            padding: 8px 10px;
+            background: var(--main-color);
+            color: #fff;
+            border-radius: 1px;
+        }
+        
+        .btn:hover {
+            background: var(--main-color-light);
+        }
+        
+        .btn:active {
+            background: var(--main-color-dark);
+        }
+        
+        img {
+            user-select: none;
+        }
+        
+        .list {
+            padding: 0;
+            /* border-top: 1px solid #000; */
+            /* padding-top: 5px; */
+            /* padding-left: 10px; */
+            /* padding-right: 10px; */
+        }
+        
+        .list li {
+            padding-left: 25px;
+            padding-right: 5px;
+            /* margin-left: 5px; */
+            color: #555;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            /* border-bottom: 1px dashed #eee; */
+            width: calc(100% - 30px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        /* 奇数行 nth-child(odd) */
+        
+        .list li:nth-child(even) {
+            /* color: var(--font-color); */
+            background: #F1F1F1;
+        }
+        
+        .list li:hover {
+            cursor: pointer;
+            color: #000;
+        }
+        
+        .active {
+            color: var(--main-color) !important;
+        }
+        
+        .li-folder {
+            background: #f1f1f1;
+            padding-left: 5px !important;
+            padding-right: 10px !important;
+            font-weight: bolder;
+            /* color: #333 !important; */
+            color: var(--main-color) !important;
+            /* background: var(--main-color) !important; */
+            width: calc(100% - 15px) !important;
+            /* padding-left: 75px !important; */
+            /* border-bottom: none !important; */
+            border-bottom: 1px solid #ddd;
+            /* border-bottom: 2px solid var(--main-color); */
+            cursor: default !important;
+            /* 可移动 */
+            -webkit-app-region: drag;
+        }
+        
+        .no {
+            width: 50px !important;
+            text-align: left;
+        }
+        
+        .top-fixed {
+            position: fixed;
+            top: 0px;
+        }
+        
+        .f-r {
+            float: right;
+        }
+        
+        .menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: calc(100% - 71px);
+            width: 50%;
+            /* background: #eee; */
+            background: var(--main-color);
+            padding-top: 10px;
+            /* border-left: 1px solid var(--main-color-dark); */
+            /* border-bottom: 0px solid var(--main-color-dark); */
+        }
+        
+        .menu li {
+            color: #333;
+            /* color: rgb(141, 62, 33); */
+            /* border-bottom: 0px solid #fff; */
+            padding-left: 10px;
+            width: 100%;
+        }
+        
+        .menu li:hover {
+            color: #fff;
+        }
+        
+        .menu .active {
+            color: #fff !important;
+            background: var(--main-color-light) !important;
+            font-weight: bolder;
+        }
+        
+        .menu li:nth-child(even) {
+            background: var(--main-color);
+        }
+        
+        .small {
+            font-size: 12px;
+            /* color: bisque; */
+        }
+        
+        .cover {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 60px);
+            /* background: var(--main-color-light); */
+            background: rgba(1, 1, 1, 0.8);
+            color: #F1F1F1;
+            /* -webkit-transition-property: all;
+            -webkit-transition-duration: .5s;
+            -webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1); */
+        }
+        
+        .cover-info {
+            text-align: center;
+            height: calc(70% - 20px);
+        }
+        
+        .cover #cover-title,
+        .cover p {
+            padding: 0px 20px;
+        }
+        
+        .cover #cover-next {
+            color: antiquewhite;
+        }
+        
+        .cover .img-box {
+            padding: 5px;
+            /* background: rgb(125, 80, 74); */
+            /* background-image: linear-gradient(rgb(141, 103, 97), rgb(125, 80, 74)); */
+            /* background: #F1F1F1; */
+            width: 240px;
+            margin: 0 auto;
+            margin-top: -125px;
+            border-radius: 3px;
+        }
+        
+        .img-box img {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .cover-bg {
+            float: left;
+            width: 60px;
+            line-height: 60px;
+            text-align: center;
+            font-weight: bolder;
+            font-size: 30px;
+            background: #fff;
+            cursor: pointer;
+        }
+        
+        .cover-bg:hover {
+            background: var(--main-color);
+            color: #f1f1f1;
+        }
+        
+        .cover-bg img {
+            width: calc(100% - 10px);
+            height: calc(100% - 10px);
+            padding: 5px;
+        }
+        /* .cover.closed {
+            height: 0;
+        } */
+        
+        .music {
+            width: 50px;
+            height: 1px;
+            margin: 100px auto;
+            position: relative;
+        }
+        
+        .music i {
+            width: 4px;
+            height: 5px;
+            position: absolute;
+            bottom: 0;
+            background-color: #fff;
+        }
+        
+        .music i:nth-of-type(1) {
+            left: 0;
+        }
+        
+        .music i:nth-of-type(2) {
+            left: 8px;
+        }
+        
+        .music i:nth-of-type(3) {
+            left: 16px;
+        }
+        
+        .music i:nth-of-type(4) {
+            left: 24px;
+        }
+        
+        .music i:nth-of-type(5) {
+            left: 32px;
+        }
+        
+        .music i:nth-of-type(6) {
+            left: 40px;
+        }
+        
+        .music.active i:nth-of-type(1) {
+            -webkit-animation: wave 0.66s linear infinite;
+            animation: wave 0.66s linear infinite;
+        }
+        
+        .music.active i:nth-of-type(2) {
+            -webkit-animation: wave 0.8s linear infinite;
+            animation: wave 0.8s linear infinite;
+        }
+        
+        .music.active i:nth-of-type(3) {
+            -webkit-animation: wave 0.7s linear infinite;
+            animation: wave 0.7s linear infinite;
+        }
+        
+        .music.active i:nth-of-type(4) {
+            -webkit-animation: wave 0.5s linear infinite;
+            animation: wave 0.5s linear infinite;
+        }
+        
+        .music.active i:nth-of-type(5) {
+            -webkit-animation: wave 0.9s linear infinite;
+            animation: wave 0.9s linear infinite;
+        }
+        
+        .music.active i:nth-of-type(6) {
+            -webkit-animation: wave 1.2s linear infinite;
+            animation: wave 1.2s linear infinite;
+        }
+        
+        @-webkit-keyframes wave {
+            0% {
+                height: 8px
+            }
+            50% {
+                height: 32px
+            }
+            100% {
+                height: 12px
+            }
+        }
+        
+        @keyframes wave {
+            0% {
+                height: 8px
+            }
+            50% {
+                height: 32px
+            }
+            100% {
+                height: 12px
+            }
+        }
+        
+        .parallax>use {
+            animation: move-forever 12s linear infinite;
+        }
+        
+        .parallax>use:nth-child(1) {
+            animation-delay: -2s;
+        }
+        
+        .parallax>use:nth-child(2) {
+            animation-delay: -2s;
+            animation-duration: 5s;
+        }
+        
+        .parallax>use:nth-child(3) {
+            animation-delay: -4s;
+            animation-duration: 3s;
+        }
+        
+        @keyframes move-forever {
+            0% {
+                transform: translate(-90px, 0%);
+            }
+            100% {
+                transform: translate(85px, 0%);
+            }
+        }
+        
+        .editorial {
+            display: block;
+            width: 100%;
+            height: 30%;
+            /* max-height: 20vh; */
+            margin: 0;
+            margin-top: 145px;
+        }
+    </style>
 </head>
 
 <body>
-<h1>Demo</h1>
+    <!-- <h1>Demo</h1> -->
+    <div class="tool-bar">
+        <!-- <img src="static/img/cover/null.png"> -->
+        <div class="cover-bg" id="cover-bg" onclick="showCover()">
+            ♫
+            <!-- <img src="static/img/icon.ico"> -->
+        </div>
+        <!-- <div style="float: left;margin-left: 8px;" id="music_name"> -->
+        <audio id="audio" controls autoplay></audio>
+        <!-- </div> -->
+        <div style="float: right;margin-right: 10px;">
+            <a class="btn-default">♡</a>
+            <a class="btn" onclick="previous()">↩</a>
+            <!-- <a class="btn" onclick="stop()" id="btn_stop">〓</a> -->
+            <a class="btn" onclick="next()">↪</a>
+        </div>
+    </div>
+    <div class="content" id="main">
+        <ul class="list" id="music_list">
+        </ul>
+    </div>
+    <div class="menu" id="menu" style="display: none;">
+        <div style="height: 30px;">
+            <a style="padding-left: 10px;" id="btn-menu-close" onclick="showMenu(false)">⇥</a>
+        </div>
+
+        <ul class="list" id="folder_list">
+        </ul>
+        <div style="text-align: center;margin-top: 30px;"><a class="btn" onclick="addFolder()">+添加目录</a></div>
+    </div>
+    <div class="cover" id="cover" style="display: none;">
+        <!-- <div style="float:left;width: 100%;line-height: 150px;text-align: center;font-weight: bolder;font-size: 100px;">♫</div> -->
+        <!-- <div class="music active">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+        </div> -->
+        <div class="cover-info">
+            <div class="img-box">
+                <img src="static/img/icon.ico" id="cover-img">
+            </div>
+            <h2 id="cover-title"></h2>
+            <p id="cover-folder"></p>
+            <p id="cover-next"></p>
+            <a onclick="showCover()" class="btn" style="position: fixed;top:0;left:10px;font-size: 30px;">⇣</a>
+        </div>
+        <svg class="editorial" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none">
+            <defs>
+            <path id="gentle-wave"
+            d="M-160 44c30 0 
+                58-18 88-18s
+                58 18 88 18 
+                58-18 88-18 
+                58 18 88 18
+                v44h-352z" />
+            </defs>
+            <g class="parallax">
+            <use xlink:href="#gentle-wave" x="50" y="0" fill="var(--main-color-dark)"/>
+            <use xlink:href="#gentle-wave" x="50" y="3" fill="var(--main-color)"/>
+            <use xlink:href="#gentle-wave" x="50" y="6" fill="var(--main-color-light)"/>  
+            </g>
+        </svg>
+
+    </div>
+    <!-- js -->
+    <!-- <script src="static/js/id3-minimized.js"></script> -->
+    <script>
+        var remote = require('electron').remote;
+        const {
+            dialog
+        } = require('electron').remote
+        const fs = require('fs');
+        const os = require('os');
+        // let currentFolderPath = `${os.homedir()}/Music/陶喆`; //当前播放的目录
+        let support_file_types = ['wav', 'mp3', 'ogg', 'acc', 'webm']; //支持的图片格式
+        let play_list = [];
+        const confFile = remote.app.getPath('userData') + '/' + 'h-music.json'
+        let userConf = {
+            folders: [{
+                path: 'All',
+                index: 0,
+                currentTime: 0
+            }],
+            folderIndex: 0,
+        }
+
+        const {
+            ipcRenderer
+        } = require('electron')
+
+        ipcRenderer.on('closing', (event, msg) => {
+            // console.log("closing", msg);
+            saveCurrentTime(); //保存当前播放进度
+            // remote.getGlobal('data').userConf = userConf;//设置值
+            writeConf(userConf, () => {
+                ipcRenderer.send('saved', true);
+            });
+        });
+
+        function readConf(f) {
+            fs.readFile(confFile, (err, data) => {
+                if (err) {
+                    console.log(err)
+                    f(false, null)
+                    return
+                }
+                // console.log('conf:', data.toString())
+                let conf;
+                try {
+                    conf = JSON.parse(data.toString());
+                    if (f) f(true, conf)
+                } catch (e) {
+                    console.log(e, data.toString())
+                    f(true, userConf)
+                }
+                return
+            })
+        }
+
+        function writeConf(confJson, f) {
+            fs.writeFile(confFile, JSON.stringify(confJson), (err) => {
+                if (err) {
+                    console.log(err)
+                    return
+                }
+                if (f) f(null);
+            })
+        }
+
+        function delConf() {
+            try {
+                fs.unlinkSync(confFile);
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        function showOpenFolderWin(f) {
+            dialog.showOpenDialog({
+                title: "打开文件夹",
+                defaultPath: "",
+                properties: ['openDirectory'],
+                // filters: [
+                //     { name: 'Img', extensions: ['png', 'jpg', 'jpeg', 'ico'] },
+                // ]
+            }).then(result => {
+                if (result.filePaths.length < 1) {
+                    console.log('select folder win closed')
+                    f(false, '')
+                    return false
+                }
+                folder = result.filePaths[0] + '/'
+                console.log('select folder', folder)
+                    // 调用f
+                f(true, folder)
+            }).catch(err => {
+                alert(err)
+            })
+        }
+
+        function getPath(file) {
+            if (file == "") {
+                return ""
+            }
+            var obj = file.lastIndexOf("/");
+            // return file.substr(obj+1);//文件名
+            return file.substr(0, obj) //路径
+        }
+
+        function getFileName(file) {
+            if (file == "") {
+                return "";
+            }
+            var obj = file.lastIndexOf("/");
+            return file.substr(obj + 1); //文件名
+        }
+
+        function getFileType(file) {
+            if (file == "") {
+                return ""
+            }
+            var obj = file.lastIndexOf(".");
+            return file.substr(obj + 1).toLowerCase(); //后缀名
+        }
+
+        function isAudio(file) {
+            return support_file_types.includes(getFileType(getFileName(file)))
+        }
+
+        function appendHTMLByID(id, html) {
+            document.getElementById(id).insertAdjacentHTML('beforeend', html)
+        }
+
+        function stop() {
+            if (userConf.folders.length < 1) {
+                return false
+            }
+            let audio = document.getElementById('audio')
+            if (audio.paused) {
+                audio.play(); //audio.play();// 这个就是播放  
+                document.getElementById('btn_stop').innerText = '〓'
+            } else {
+                audio.pause(); // 这个就是暂停
+                document.getElementById('btn_stop').innerText = '▷'
+            }
+        }
+
+        function setFileIndex(folderIndex, index) {
+            if (folderIndex == -1) {
+                folderIndex = userConf.folderIndex;
+            }
+            // console.log('set file index', folderIndex, userConf.folders[folderIndex]);
+            userConf.folders[folderIndex].index = index;
+        }
+
+        function getFileIndex(folderIndex) {
+            if (folderIndex == -1) {
+                folderIndex = userConf.folderIndex;
+            }
+            // console.log('folder:', userConf.folders[folderIndex])
+            return userConf.folders[folderIndex].index;
+        }
+
+        function play(i) {
+            if (play_list.length < 1) {
+                return false;
+            }
+            if (i < 0) {
+                // i++;
+                i = play_list.length - 1
+            }
+            if (i == play_list.length) {
+                // i--;
+                i = 0;
+            }
+
+            //1.移除之前的active css
+            if (document.getElementById(`m${getFileIndex(-1)}`)) {
+                document.getElementById(`m${getFileIndex(-1)}`).classList.remove('active');
+            }
+            document.getElementById(`m${i}`).classList.add('active');
+            // console.log(i, index)
+
+            //2.播放
+            let file = play_list[i]
+            let fileFull = file
+            let fileName = getFileName(fileFull)
+            console.log(`play [${fileName}]`)
+            document.getElementById('audio').setAttribute('src', fileFull)
+            document.title = `正在播放-${fileName}`
+            if (userConf.folderIndex == 0) {
+                currentFile = file;
+            }
+
+            //3.修改index
+            // userConf.folders[folderIndex].index = i;
+            setFileIndex(-1, i)
+
+            //4.设置封面
+            setCover();
+        }
+
+        function stop() {
+            document.getElementById('audio').pause();
+        }
+
+        function start() {
+            document.getElementById('audio').play();
+        }
+
+        function next() {
+            play(getFileIndex(-1) + 1)
+        }
+
+        function previous() {
+            play(getFileIndex(-1) - 1)
+        }
+
+        function local() {
+            document.getElementById('main').scrollTop += 30;
+        }
+
+        function showMenu(isShow) {
+            if (isShow) {
+                listFolder(userConf.folderIndex);
+                document.getElementById('menu').style.display = '';
+            } else {
+                document.getElementById('menu').style.display = 'none';
+            }
+        }
+
+        function list(folderInfo, f) {
+            if (!folderInfo || folderInfo.path == '') {
+                return false
+            }
+            let currentFolderPath = folderInfo.path;
+            let index = folderInfo.index;
+            // console.log(currentFolderPath, index);
+            play_list = [];
+            document.getElementById('music_list').innerHTML = '';
+            appendHTMLByID('music_list', `<li id="folder" class="li-folder top-fixed">↳ ${currentFolderPath}<a class="f-r" onclick="showMenu(true)">⇤</a></li>`)
+            appendHTMLByID('music_list', `<li>null</li>`)
+            let files = []
+            try {
+                files = fs.readdirSync(currentFolderPath)
+            } catch (err) {
+                console.log('open file:' + currentFolderPath + ' failed');
+                return false
+            }
+            let i = 0
+            files.forEach((file) => {
+                if (isAudio(file)) {
+                    fileFull = currentFolderPath + file;
+                    appendHTMLByID('music_list', `<li id="m${i}" onclick="play(${i})">♪ ${file}</li>`)
+                    play_list.push(fileFull)
+                    i++;
+                }
+            });
+            if (i > 0) {
+                // console.log(userConf);
+                if (f) {
+                    f();
+                }
+            } else {
+                // document.getElementById('music_list').innerHTML = '';
+                openFolder(userConf.folderIndex);
+                showMenu(true);
+            }
+
+        }
+
+        function saveCurrentTime() {
+            console.log('saveCurrentTime', userConf.folderIndex);
+            userConf.folders[userConf.folderIndex].currentTime = document.getElementById('audio').currentTime;
+            console.log('save currentTime', userConf.folders[userConf.folderIndex].currentTime);
+        }
+
+        function openFolder(i, f) {
+            //保存上个文件夹的进度
+            if (userConf.folderIndex != i && userConf.folders[userConf.folderIndex]) {
+                saveCurrentTime();
+            }
+            //打开新目录
+            userConf.folderIndex = i;
+            if (i == 0) { //显示全部
+                console.log('open all')
+                document.getElementById('music_list').innerHTML = '';
+                play_list = [];
+                appendHTMLByID('music_list', `<li id="folder" class="li-folder top-fixed">↳ 全部<a class="f-r" onclick="showMenu(true)">⇤</a></li>`)
+                appendHTMLByID('music_list', `<li>null</li>`)
+                let i = 0;
+                let j = 0;
+                userConf.folders.forEach((folderInfo) => {
+                    if (!folderInfo || folderInfo.path == '' || folderInfo.path == 'All') {
+                        return false
+                    }
+                    let currentFolderPath = folderInfo.path;
+                    let index = folderInfo.index;
+                    // console.log(currentFolderPath, index);
+                    let files = []
+                    try {
+                        files = fs.readdirSync(currentFolderPath);
+                    } catch (err) {
+                        console.log('open file:' + currentFolderPath + ' failed');
+                        return false
+                    }
+                    // appendHTMLByID('music_list', `<li>↳ ${currentFolderPath}</li>`)
+                    files.forEach((file) => {
+                        if (isAudio(file)) {
+                            fileFull = currentFolderPath + file;
+                            appendHTMLByID('music_list', `<li id="m${i}" onclick="play(${i})">♪ ${file}</li>`)
+                            play_list.push(fileFull)
+                            i++;
+                        }
+                    });
+                    j++;
+                });
+                if (folderAdded) {
+                    console.log('更新index', currentFile);
+                    //更新index
+                    let newIndex = play_list.indexOf(currentFile);
+                    if (newIndex < 0) {
+                        newIndex = 0;
+                    }
+                    userConf.folders[0].index = newIndex;
+                    folderAdded = false;
+                }
+                // 清空了，停止播放
+                if (play_list.length == 0) {
+                    document.getElementById('audio').setAttribute('src', '');
+                    showMenu(true);
+                } else {
+                    //播放
+                    play(getFileIndex(-1));
+                    //跳转播放进度
+                    document.getElementById('audio').currentTime = userConf.folders[userConf.folderIndex].currentTime;
+                    // console.log('in all play', getFileIndex(-1))
+                    showMenu(false);
+                }
+
+                return
+            }
+            // writeConf(userConf);
+            list(userConf.folders[i], () => {
+                showMenu(false);
+                let j = getFileIndex(i);
+                if (f && f != '') {
+                    j = play_list.indexOf(f);
+                    // console.log('j', j, f, play_list)
+                }
+                play(j);
+                document.getElementById('audio').currentTime = userConf.folders[i].currentTime;
+            })
+        }
+
+        function folderExist(path) {
+            let exist = false
+            userConf.folders.forEach((folder) => {
+                if (folder.path == path) {
+                    // alert('目录已存在!');
+                    exist = true;
+                }
+            });
+            return exist;
+        }
+
+        function delFolder(i) {
+            userConf.folders.splice(i, 1);
+            console.log('del', i, userConf.folders.length);
+            // 如果不是当前播放目录则不刷新list,刷新Menu
+            if (userConf.folderIndex != i) {
+                //如果是All，则刷新list
+                if (userConf.folderIndex == 0) {
+                    folderAdded = true
+                    openFolder(0)
+                }
+                showMenu(true);
+                return
+            }
+            // if (userConf.folders.length == 0) {
+            //     //刷新play list
+            //     document.getElementById('audio').setAttribute('src', '');
+            //     document.getElementById('music_list').innerHTML = '';
+            //     //刷新目录
+            //     document.getElementById('btn-menu-close').style.display = 'none';
+            //     showMenu(true);
+            //     return
+            // }
+            if (i + 1 <= userConf.folders.length) {
+                openFolder(i);
+            } else {
+                openFolder(i - 1);
+            }
+        }
+
+        function newFolder(path, i, file) {
+            if (folderExist(path)) {
+                return false
+            }
+            // console.log(path);
+            let newFolder = {
+                path: path,
+                index: 0,
+                currentTime: 0,
+            };
+            //更新file列表
+            list(newFolder, () => {
+                if (file && file != '') {
+                    i = play_list.indexOf(file);
+                }
+                // 如果当前目录是ALL，则标记添加成功
+                if (userConf.folderIndex == 0) {
+                    folderAdded = true;
+                    console.log('folderAdded', folderAdded)
+                }
+                userConf.folders.push(newFolder);
+                userConf.folderIndex = userConf.folders.length - 1;
+                // writeConf(userConf);
+                // listFolder(userConf.folders.length - 1);
+                showMenu(false);
+                // 默认播放第一个
+                play(i);
+            });
+        }
+
+        let folderAdded = false;
+
+        let currentFile = '';
+
+        function addFolder() {
+            showOpenFolderWin((ok, path) => {
+                if (ok) {
+                    newFolder(path, 0);
+                }
+            })
+        }
+
+        function listFolder(index) {
+            document.getElementById('folder_list').innerHTML = '';
+            let i = 0;
+            // console.log(userConf.folders);
+            userConf.folders.forEach((folder) => {
+                let pathName = getFileName(getPath(folder.path));
+                let oncontextmenu = `oncontextmenu="showDelFolderMenu(${i})"`;
+                if (folder.path == 'All') {
+                    pathName = '全部';
+                    oncontextmenu = ''
+                }
+                if (index == i) {
+                    appendHTMLByID('folder_list', `<li class="active" id="d${i}" onclick="openFolder(${i})" ${oncontextmenu}>▶ ${pathName}</li>`)
+                } else {
+                    appendHTMLByID('folder_list', `<li id="d${i}" onclick="openFolder(${i})" ${oncontextmenu}>↳ ${pathName}</li>`)
+                }
+                i++;
+            })
+            if (i > 0) {
+                document.getElementById('btn-menu-close').style.display = '';
+            }
+        }
+
+        document.getElementById("audio").onended = function() {
+            next();
+        };
+
+        // 监听键盘事件
+        document.onkeydown = (event) => {
+            event = event || window.event; /*||为或语句，当IE不能识别event时候，就执行window.event 赋值*/
+            // console.log(event.keyCode);
+            switch (event.keyCode) { /*keyCode:字母和数字键的键码值*/
+                case 27: //esc
+                    // esc()
+                    break;
+                    /*37、38、39、40分别对应左上右下*/
+                case 37: //左
+                    previous();
+                    break;
+                case 38: //上
+                    break;
+                case 39: //右
+                    next();
+                    break;
+                case 40: //下
+                    break;
+            }
+        }
+
+        //菜单
+        const {
+            Menu,
+            MenuItem
+        } = remote
+
+        const folder_menu = new Menu();
+
+        var delIndex = 0;
+
+        // folder_menu.append(new MenuItem({
+        //     type: 'separator'
+        // }))
+        folder_menu.append(new MenuItem({
+            label: '删除',
+            click() {
+                delFolder(delIndex);
+            }
+        }))
+
+        function showDelFolderMenu(i) {
+            delIndex = i;
+            folder_menu.popup({
+                window: remote.getCurrentWindow()
+            })
+        }
+
+        function getFolderIndex(folder) {
+            let i = 0;
+            let r = -1;
+            userConf.folders.forEach((f) => {
+                if (f.path == folder) {
+                    r = i;
+                }
+                i++;
+            })
+            return r;
+        }
+
+        ipcRenderer.on('play', (event, action) => {
+            if (action == 'next') {
+                next();
+            } else if (action == 'previous') {
+                previous();
+            } else if (action == 'stop') {
+                stop();
+            } else if (action == 'start') {
+                start();
+            }
+        });
+
+        ipcRenderer.on('opened-file', (event, file) => {
+            // 没有传入文件，直接读取配置文件
+            if (file == '') {
+                loadConf();
+                return
+            }
+            // console.log("opened-file", file, folder, userConf.folders);
+            let folder = getPath(file) + '/';
+            if (folderExist(folder)) { //目录已存在
+                // console.log('opened-file', '目录已存在')
+                openFolder(getFolderIndex(folder), file)
+            } else { //目录不存在,则新增目录
+                // console.log('opened-file', '目录不存在')
+                newFolder(folder, -1, file);
+            }
+        });
+
+        function loadConf() {
+            console.log('load conf');
+            if (userConf.folders.length > 0) {
+                // list(userConf.folders[userConf.folderIndex], () => {
+                //     play(getFileIndex(-1));
+                //     //跳转到退出时播放进度
+                //     document.getElementById('audio').currentTime = userConf.existTime;
+                // });
+                openFolder(userConf.folderIndex);
+            } else {
+                document.getElementById('btn-menu-close').style.display = 'none';
+                showMenu(true);
+            }
+        }
+
+        function setDynamic(i) {
+            switch (i) {
+                case 1:
+                    break;
+            }
+        }
+
+        var current = 0;
+
+        function imgRotate(leftOrRight) {
+            var img = document.getElementById('cover-img');
+            current = (current - 1) % 360; //左旋转
+            img.style.transform = 'rotate(' + current + 'deg)';
+        }
+
+        let coverShow = false;
+
+        function showCover() {
+            if (play_list.length == 0) {
+                return false
+            }
+            if (!coverShow) {
+                showMenu(false);
+                document.getElementById('cover').style.display = '';
+                setInterval(imgRotate, 120);
+            } else {
+                document.getElementById('cover').style.display = 'none';
+            }
+            coverShow = !coverShow;
+            // document.getElementById('cover').classList.toggle('closed');
+        }
+
+        function getCurrentFile() {
+            return getFileName(play_list[getFileIndex(-1)]);
+        }
+
+        function getCurrentFolder() {
+            return userConf.folders[userConf.folderIndex].path;
+        }
+
+        function getNextFile() {
+            let i = getFileIndex(-1) + 1;
+            console.log('next', i)
+            if (i == play_list.length) {
+                i = 0
+            }
+            return getFileName(play_list[i]);
+        }
+
+        function setCover() {
+            let file = getCurrentFile();
+            let folder = getCurrentFolder();
+            document.getElementById('cover-title').innerText = file;
+            document.getElementById('cover-folder').innerText = `↳ ${folder}`;
+            document.getElementById('cover-next').innerText = `下一首: ${getNextFile()}`;
+        }
+
+        function init() {
+            readConf((ok, conf) => {
+                if (ok) {
+                    userConf = conf;
+                    // 查询打开的文件
+                    ipcRenderer.send('get-opened-file', true);
+                } else {
+                    writeConf(userConf, null);
+                }
+            })
+        }
+
+        window.onload = () => {
+            // delConf();
+            init();
+        }
+    </script>
 </body>
 
 </html>
