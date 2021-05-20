@@ -1,1 +1,3 @@
-# a demo for electron app
+# HMusic
+
+A music player in Mac OS
