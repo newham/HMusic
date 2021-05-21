@@ -61,7 +61,7 @@ function createIndexWindow() {
 
     win.on('close', (e) => {
         if (!saved) {
-            win.minimize();
+            win.hide();
             e.preventDefault();
         }
         //如果保存成功，直接关闭
@@ -85,7 +85,7 @@ function createTray() {
     trayPre = new Tray(path.join(__dirname, 'static/img/previous.png'));
     const contextMenu = Menu.buildFromTemplate([
         // { label: '暂停', click: () => {} },
-        { label: '主窗口', click: () => { win.restore() } },
+        { label: '主窗口', click: () => { win.show() } },
         { type: 'separator' },
         {
             label: '暂停/播放',
@@ -153,6 +153,8 @@ app.on('activate', () => {
     // 通常在应用程序中重新创建一个窗口。
     if (!win) {
         createWindow();
+    } else {
+        win.show();
     }
 })
 
